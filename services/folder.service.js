@@ -50,6 +50,42 @@ class FolderService {
             result: folder
         };
     }
+    async setDefault(userId){
+        const errors = [];
+
+        if(!userId) {
+            errors.push({
+                field: "userId",
+                messages: "Empty userId."
+            })
+            throw errors;
+        }
+
+        const user = await User.findByPk(userId);
+
+        if(!user){
+            errors.push({
+                field: 'user',
+                message: 'User with defined ID does not exist. ' + userId
+            });
+        }
+
+        if(errors.length !== 0) throw errors;
+
+        const title = "Main";
+        const isDefault = true;
+        const folder = await Folder.create({
+            title,
+            userId,
+            isDefault
+        });
+
+        return {
+            operation: "create_default_folder",
+            status: "success",
+            result: folder
+        };
+    }
     async getById(id) {
         const errors = [];
 
@@ -63,16 +99,39 @@ class FolderService {
 
         if(errors.length !== 0) throw errors;
 
-        const card = await Folder.findByPk(id);
+        const folder = await Folder.findByPk(id);
 
         return {
-            id: card.id,
-            name: card.name,
-            hospital: card.hospital,
-            description: card.description,
-            date_start: card.date_start,
-            date_expire: card.date_expire,
+            id: folder.id,
+            title: folder.title,
+            isDefault: folder.isDefault
         }
+    }
+    async getAllByUserId(id) {
+        const errors = [];
+
+        if(!id) {
+            errors.push({
+                field: "id",
+                messages: "Empty ID."
+            })
+            throw errors;
+        }
+
+        if(errors.length !== 0) throw errors;
+
+        const folders = await Folder.findAll({where: {
+                userId: id
+            }});
+        const m = folders.map((folder) => {
+            return {
+                id: folder.id,
+                title: folder.title,
+                isDefault: folder.isDefault
+            }
+        })
+        const parsed = await JSON.stringify(m)
+        return parsed;
     }
     async delete(id){
         const errors = [];

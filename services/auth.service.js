@@ -93,7 +93,8 @@ class AuthService {
         const token = await jwt.sign(payload, secret);
 
         return {
-            token: `Bearer ${token}`
+            token: `Bearer ${token}`,
+            id: user.id
         };
     }
 
@@ -159,7 +160,8 @@ class AuthService {
         const token = await jwt.sign(payload, secret);
 
         return {
-            token: `Bearer ${token}`
+            token: `Bearer ${token}`,
+            id: user.id
         };
     }
 

@@ -1,10 +1,18 @@
 const AuthService = require('../services/auth.service')
+const FolderService = require('../services/folder.service')
+
 
 class AuthController {
     async register(req, res) {
-        console.log(req.body);
         try {
-            res.status(200).json(await AuthService.register(req.body));
+            const data = (await AuthService.register(req.body));
+            try {
+                await FolderService.setDefault(data.id)
+                res.status(200).json(data)
+            }
+            catch (e) {
+                console.log(e)
+            }
         }
         catch(e) {
             res.status(422).json(e);

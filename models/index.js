@@ -36,7 +36,7 @@ try {
 const models = {
     sequelize,
     User: require('./user.model')(sequelize),
-    Folder: require('./user.model')(sequelize),
+    Folder: require('./folder.model')(sequelize),
     Note: require('./note.model')(sequelize),
     RefreshToken: require('./refreshtoken.model')(sequelize),
 }
