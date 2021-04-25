@@ -107,6 +107,51 @@ class FolderService {
             isDefault: folder.isDefault
         }
     }
+
+    async editTitle(data) {
+        const errors = [];
+
+        if(!data) {
+            errors.push({
+                field: "data",
+                messages: "Empty data."
+            })
+            throw errors;
+        }
+
+        const { id, title } = data;
+
+        if(title) {
+            if(title.length < 3) {
+                errors.push({
+                    field: 'title',
+                    message: 'Title should contain at least 3 characters.'
+                });
+            }
+        }
+        else{
+            errors.push({
+                field: 'title',
+                message: 'Title of required.'
+            });
+        }
+
+        const folder = await Folder.findByPk(id);
+
+        if (!folder){
+            errors.push({
+                field: 'id',
+                message: 'No folder found with ID '+id
+            });
+        }
+
+        if(errors.length !== 0) throw errors;
+
+        folder.title = title;
+        await folder.save();
+        return folder.toJSON();
+    }
+
     async getAllByUserId(id) {
         const errors = [];
 
@@ -152,7 +197,8 @@ class FolderService {
 
         return {
             operation: "destroy",
-            folder: folder
+            folder: folder,
+            status: "success"
         }
     }
 }

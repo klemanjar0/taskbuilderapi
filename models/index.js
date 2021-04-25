@@ -18,10 +18,10 @@ const sequelize = new Sequelize(
     }
 );
 
-try {
+
     sequelize.authenticate().then(
-        () => {
-            sequelize.sync({ force: false })
+        async () => {
+            await sequelize.sync({ force: false })
                 .then(function(err) {
                     console.log('The database is connected and stable.');
                 }, function (err) {
@@ -29,9 +29,7 @@ try {
                 });
         }
     );
-} catch (error) {
-    console.error('Unable to connect to the database:', error);
-}
+
 
 const models = {
     sequelize,
