@@ -1,6 +1,5 @@
-var express = require('express')
-var router = express.Router()
-const passport = require('passport')
+const express = require('express')
+const router = express.Router()
 const FolderController = require('../controllers/folder.controller')
 
 

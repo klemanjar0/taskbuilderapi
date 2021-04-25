@@ -14,7 +14,7 @@ module.exports = (sequelize) => {
             allowNull: false,
         },
         body: {
-            type: DataTypes.DOUBLE,
+            type: DataTypes.STRING,
             allowNull: true
         },
         isPinned : {

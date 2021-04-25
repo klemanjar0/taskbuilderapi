@@ -1,9 +1,12 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 const users = require('./users');
-const folders = require('./folders')
+const folders = require('./folders');
+const notes = require('./notes');
+
 router.use('/user', users);
 router.use('/folder', folders);
+router.use('/note', notes);
 
 module.exports = router;
