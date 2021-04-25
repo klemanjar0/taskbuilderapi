@@ -85,6 +85,32 @@ class NoteController {
             res.status(422).json(e);
         }
     }
+    async verifyCreateAccess(req, res, next) {
+        try {
+            if(await NoteService.verifyCreateAccess(req.body.folderId, req.user.id)) next();
+        }
+        catch (e) {
+            if(e.status){
+                res.status(e.status).json(e.message);
+            }
+            else{
+                res.status(500).json(undefined);
+            }
+        }
+    }
+    async verifyAccess(req, res, next) {
+        try {
+            if(await NoteService.verifyCreateAccess(req.body.id, req.user.id)) next();
+        }
+        catch (e) {
+            if(e.status){
+                res.status(e.status).json(e.message);
+            }
+            else{
+                res.status(500).json(undefined);
+            }
+        }
+    }
 }
 
 module.exports = new NoteController();

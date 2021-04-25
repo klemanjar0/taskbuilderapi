@@ -5,7 +5,7 @@ const users = require('./users');
 const folders = require('./folders');
 const notes = require('./notes');
 
-router.use('/user', users);
+router.use(users);
 router.use('/folder', folders);
 router.use('/note', notes);
 

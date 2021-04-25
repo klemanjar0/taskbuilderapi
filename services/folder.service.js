@@ -1,7 +1,7 @@
 const { Folder, User } = require('../models');
 
 class FolderService {
-    async create(data){
+    async create(data, userID){
         const errors = [];
 
         if(!data) {
@@ -12,7 +12,7 @@ class FolderService {
             throw errors;
         }
 
-        const { title, userId } = data;
+        const { title } = data;
 
         if(title) {
             if(title.length < 3) {
@@ -28,17 +28,18 @@ class FolderService {
                 message: 'Title of required.'
             });
         }
-        const user = await User.findByPk(userId);
-
+        const user = await User.findByPk(userID);
         if(!user){
             errors.push({
                 field: 'user',
-                message: 'User with defined ID does not exist. ' + userId
+                message: 'User with defined ID does not exist. ' + userID
             });
         }
 
         if(errors.length !== 0) throw errors;
 
+
+        const userId = user.id;
         const folder = await Folder.create({
             title,
             userId
@@ -192,6 +193,25 @@ class FolderService {
             folder: folder,
             status: "success"
         }
+    }
+    async verifyAccess(folderid, idUser) {
+        const folder = await Folder.findByPk(folderid);
+
+        if(!folder) {
+            throw {
+                status: 404,
+                message: "Folder not found"
+            };
+        }
+
+        if(folder.userId !== idUser) {
+            throw {
+                status: 403,
+                message: "Unauthorized for this data"
+            };
+        }
+
+        return true;
     }
 }
 

@@ -3,7 +3,7 @@ const FolderService = require('../services/folder.service')
 class FolderController {
     async create(req, res) {
         try {
-            const data = (await FolderService.create(req.body));
+            const data = (await FolderService.create(req.body, req.user.id));
             try {
                 res.status(200).json(data)
             }
@@ -69,6 +69,19 @@ class FolderController {
         }
         catch(e) {
             res.status(422).json(e);
+        }
+    }
+    async verifyAccess(req, res, next) {
+        try {
+            if(await FolderService.verifyAccess(req.body.id, req.user.id)) next();
+        }
+        catch (e) {
+            if(e.status){
+                res.status(e.status).json(e.message);
+            }
+            else{
+                res.status(500).json(undefined);
+            }
         }
     }
 }

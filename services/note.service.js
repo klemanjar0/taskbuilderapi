@@ -192,6 +192,48 @@ class NoteService {
 
         return notes;
     }
+
+    async verifyCreateAccess(folderId, idUser) {
+        const folder = await Folder.findByPk(folderId);
+
+        if(!folder) {
+            throw {
+                status: 404,
+                message: "Folder not found"
+            };
+        }
+
+        if(folder.userId !== idUser) {
+            throw {
+                status: 403,
+                message: "Unauthorized for this data"
+            };
+        }
+
+        return true;
+    }
+
+    async verifyAccess(noteId, idUser) {
+        const note = await Note.findByPk(noteId);
+        const folderId = note.folderId;
+        const folder = await Folder.findByPk(folderId);
+
+        if(!folder) {
+            throw {
+                status: 404,
+                message: "Folder not found"
+            };
+        }
+
+        if(folder.userId !== idUser) {
+            throw {
+                status: 403,
+                message: "Unauthorized for this data"
+            };
+        }
+
+        return true;
+    }
 }
 
 module.exports = new NoteService();
