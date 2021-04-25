@@ -31,7 +31,7 @@ class FolderController {
     }
     async getAllById(req, res) {
         try {
-            const data = (await FolderService.getAllByUserId(req.body.id));
+            const data = await FolderService.getAllByUserId(req.body.id);
             try {
                 res.status(200).json(data)
             }

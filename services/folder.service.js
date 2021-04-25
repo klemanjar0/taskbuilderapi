@@ -101,11 +101,7 @@ class FolderService {
 
         const folder = await Folder.findByPk(id);
 
-        return {
-            id: folder.id,
-            title: folder.title,
-            isDefault: folder.isDefault
-        }
+        return folder;
     }
 
     async editTitle(data) {
@@ -162,21 +158,17 @@ class FolderService {
             })
             throw errors;
         }
+        const folders = await Folder.findAll({where: {
+            userId: id
+        }});
 
+        if(folders.length === 0) errors.push({
+            field: "id",
+            messages: 'No folder found with ID '+id
+        })
         if(errors.length !== 0) throw errors;
 
-        const folders = await Folder.findAll({where: {
-                userId: id
-            }});
-        const m = folders.map((folder) => {
-            return {
-                id: folder.id,
-                title: folder.title,
-                isDefault: folder.isDefault
-            }
-        })
-        const parsed = await JSON.stringify(m)
-        return parsed;
+        return folders;
     }
     async delete(id){
         const errors = [];
